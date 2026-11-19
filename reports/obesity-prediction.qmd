@@ -45,20 +45,23 @@ We use the UCI Obesity Levels dataset (UCI Machine Learning Repository 2019), wh
 os.makedirs("../data/raw", exist_ok=True)
 os.makedirs("../data/processed", exist_ok=True)
 
+csv_path = "../data/raw/ObesityDataSet_raw_and_data_sinthetic.csv"
+
 # download data as zip and extract
 # this archive (UCI "Estimation of Obesity Levels Based On Eating Habits and Physical Condition") also contains ObesityDataSet_raw_and_data_sinthetic.csv
-url ="https://archive.ics.uci.edu/static/public/544/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip"
+if not os.path.exists(csv_path):
+    url ="https://archive.ics.uci.edu/static/public/544/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip"
 
-request = requests.get(url)
-with open("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'wb') as f:
-    f.write(request.content)
+    request = requests.get(url)
+    with open("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'wb') as f:
+        f.write(request.content)
 
-with zipfile.ZipFile("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'r') as zip_ref:
-    zip_ref.extractall("../data/raw")
+    with zipfile.ZipFile("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'r') as zip_ref:
+        zip_ref.extractall("../data/raw")
 
-os.remove("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip")
+    os.remove("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip")
 
-# read in data
+# Read in data
 obesity = pd.read_csv("../data/raw/ObesityDataSet_raw_and_data_sinthetic.csv").drop(columns=["Height","Weight"])
 ```
 
