@@ -1,0 +1,48 @@
+---
+title: "Comparing model performances for predicting obesity levels"
+author:"Anuoluwapo Akinkunmi, Raghav Haralalka, Sebastian Tenorio, Han Bao"
+date:"2026/11/21"
+jupyter:python3
+---
+
+# Summary
+
+We compare a dummy classifier, a decision tree, logistic regression, and a support vector classifier on a seven-class weight-status prediction task. The models use demographic, family history, and lifestyle variables from the UCI Obesity Levels dataset, with height and weight excluded. About 77% of the published records are synthetic, which limits what performance on this dataset can tell us about performance on independently collected survey data.
+
+<!-- Add the selected model, its held-out test score, a comparison with the dummy baseline, and the main implication. Keep the final summary to one paragraph. -->
+
+# Introduction
+
+Researchers have compared machine learning models for classifying weight status from survey data, including models that use both eating habits and physical measurements ([Kaur et al., 2022](https://doi.org/10.1007/s12020-022-03215-4) and [Solomon et al., 2023](https://doi.org/10.3390/diagnostics13152610)). For this dataset, the authors calculated body mass index (BMI) from height and weight and used it to assign the weight-status labels ([Mendoza Palechor & de la Hoz Manotas, 2019](https://doi.org/10.1016/j.dib.2019.104344)). Excluding those measurements and any features derived from them lets us test how much predictive information comes from the remaining survey responses.
+
+Our research question is: **How well can demographic, family history, and lifestyle features predict the seven weight-status categories when height and weight are excluded, and which of the four classifiers performs best?** Comparing the classifiers against a dummy baseline shows whether using these survey responses improves predictions over a simple benchmark.
+
+We use the [UCI Obesity Levels dataset (2019)](https://doi.org/10.24432/C5H31Z), which contains 2,111 records based on an online survey conducted in Mexico, Peru, and Colombia. Each row describes one individual or is a synthetic record generated from the survey data. The candidate predictors include age, gender, family history of overweight, eating habits, physical activity, and other behaviours such as usual transportation. The response is the recorded weight-status category: insufficient weight, normal weight, overweight level I or II, or obesity type I, II, or III.
+
+# Methods
+
+## Data
+
+<!-- Describe the source, cleaning decisions, and train/test split in prose. Add executable chunks that download the original data into data/raw/ and write cleaned or intermediate data to data/processed/. Split the data before exploratory analysis or fitting preprocessing steps. -->
+
+## Analysis
+
+<!-- Add the training-set summary and at least one relevant training-set visualization. Explain preprocessing, model choices, and the evaluation metric in English. Document how the dummy classifier, decision tree, logistic regression, and support vector classifier are compared using training data, how the final model is selected, and how the held-out test set is used for final evaluation. Include the executable chunks in this document. -->
+
+# Results
+
+<!-- Present the model comparison and final test-set performance with captioned tables or figures. Number all figures and tables, refer to them in the text, and check that the narrative matches the results. Give axes, units, legends, and column names clear labels. -->
+
+# Discussion
+
+<!-- Answer the research question using the observed results. Discuss their practical meaning, whether the findings matched expectations, assumptions, limitations, potential impact, and future questions. Consider how synthetic records affect interpretation and what validation on independently collected data would add. -->
+
+# References
+
+*Estimation of obesity levels based on eating habits and physical condition* [Data set]. (2019). UCI Machine Learning Repository. [https://doi.org/10.24432/C5H31Z](https://doi.org/10.24432/C5H31Z)
+
+Kaur, R., Kumar, R., & Gupta, M. (2022). Predicting risk of obesity and meal planning to reduce the obese in adulthood using artificial intelligence. *Endocrine, 78*(3), 458–469. [https://doi.org/10.1007/s12020-022-03215-4](https://doi.org/10.1007/s12020-022-03215-4)
+
+Mendoza Palechor, F., & de la Hoz Manotas, A. (2019). Dataset for estimation of obesity levels based on eating habits and physical condition in individuals from Colombia, Peru and Mexico. *Data in Brief, 25*, 104344. [https://doi.org/10.1016/j.dib.2019.104344](https://doi.org/10.1016/j.dib.2019.104344)
+
+Solomon, D. D., Khan, S., Garg, S., Gupta, G., Almjally, A., Alabduallah, B. I., Alsagri, H. S., Ibrahim, M. M., & Abdallah, A. M. A. (2023). Hybrid majority voting: Prediction and classification model for obesity. *Diagnostics, 13*(15), 2610. [https://doi.org/10.3390/diagnostics13152610](https://doi.org/10.3390/diagnostics13152610)
