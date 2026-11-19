@@ -1,0 +1,14 @@
+---
+title: "Obesity Prediction"
+author: "Your Name"
+date: "2026-11-19"
+format:
+  html:
+    embed-resources: true
+---
+
+```{python}
+#| label: setup-py
+import sys
+print(sys.executable)
+```
