@@ -6,7 +6,18 @@ jupyter: python3
 ---
 
 ```{python}
-# Add imports here.
+# import libraries
+import os
+import numpy as np
+import pandas as pd
+import requests
+import zipfile
+import altair as alt
+from sklearn import set_config
+from sklearn.model_selection import train_test_split
+
+# png, so the charts also show in the PDF
+_ = alt.renderers.enable("png", scale_factor=2)
 ```
 
 # Summary
@@ -29,9 +40,46 @@ We use the UCI Obesity Levels dataset (UCI Machine Learning Repository 2019), wh
 
 <!-- Describe the source, cleaning decisions, and train/test split in prose. Add executable chunks that download the original data into data/raw/ and write cleaned or intermediate data to data/processed/. Split the data before exploratory analysis or fitting preprocessing steps. -->
 
+```{python}
+# create the data folders if they don't exist
+os.makedirs("../data/raw", exist_ok=True)
+os.makedirs("../data/processed", exist_ok=True)
+
+csv_path = "../data/raw/ObesityDataSet_raw_and_data_sinthetic.csv"
+
+# download data as zip and extract
+# this archive (UCI "Estimation of Obesity Levels Based On Eating Habits and Physical Condition") also contains ObesityDataSet_raw_and_data_sinthetic.csv
+if not os.path.exists(csv_path):
+    url ="https://archive.ics.uci.edu/static/public/544/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip"
+
+    request = requests.get(url)
+    with open("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'wb') as f:
+        f.write(request.content)
+
+    with zipfile.ZipFile("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'r') as zip_ref:
+        zip_ref.extractall("../data/raw")
+
+    os.remove("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip")
+
+# Read in data
+obesity = pd.read_csv("../data/raw/ObesityDataSet_raw_and_data_sinthetic.csv").drop(columns=["Height","Weight"])
+```
+
+
 ## Analysis
 
 <!-- Add the training-set summary and at least one relevant training-set visualization. Explain preprocessing, model choices, and the evaluation metric in English. Document how the dummy classifier, decision tree, logistic regression, and support vector classifier are compared using training data, how the final model is selected, and how the held-out test set is used for final evaluation. Include the executable chunks in this document. -->
+```{python}
+set_config(transform_output="pandas")
+
+# split the data into training (70%) and test (30%) sets
+obesity_train, obesity_test = train_test_split(
+    obesity, train_size=0.70, stratify=obesity["NObeyesdad"], random_state=522
+)
+
+obesity_train.to_csv("../data/processed/obesity_train.csv")
+obesity_test.to_csv("../data/processed/obesity_test.csv")
+```
 
 # Results
 
