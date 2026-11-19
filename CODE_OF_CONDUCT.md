@@ -37,7 +37,8 @@ the project or further action under UBC policy.
 ## Reporting
 
 If you experience or witness unacceptable behaviour, please contact the
-team at [anu120@student.ubc.ca](anu120@student.ubc.ca). Reports will be handled confidentially.
+team at anu120@student.ubc.ca. Reports will be handled confidentially. 
+The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances.
 If the concern involves a team member, or you prefer not to contact the
 team directly, please reach out to the DSCI 522 teaching team.
 
