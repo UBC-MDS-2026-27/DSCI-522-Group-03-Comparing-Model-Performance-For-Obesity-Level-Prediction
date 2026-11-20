@@ -100,7 +100,7 @@ obesity_test.to_csv("../data/processed/obesity_test.csv", index=False)
 
 ## Exploratory data analysis
 
-We first summarized the numeric features in the training set (Table 1), checked the balance of the seven weight-status categories (Figure 1), and compared the distribution of each feature across categories (Figures 2 and 3).
+We first summarized the numeric features in the training set (@tbl-numeric-summary), checked the balance of the seven weight-status categories (@fig-class-balance), and compared the distribution of each feature across categories (@fig-numeric-by-class and @fig-categorical-by-class).
 
 ```{python}
 #| label: tbl-numeric-summary
@@ -237,10 +237,6 @@ Exploratory data analysis shows that age, physical activity frequency, gender an
 ## Analysis
 
 Age and the five survey-scale features (vegetable consumption frequency, number of main meals per day, daily water intake, physical activity frequency and time using technology devices) were treated as numeric variables and standardized. Although these survey questions were answered on short integer scales, most values in the data set are not whole numbers because of the synthetic records, so treating them as categories would not be appropriate. The remaining features (gender, family history of overweight, frequent consumption of high-calorie food, eating between meals, smoking, calorie monitoring, alcohol consumption and usual transportation) were one-hot encoded, ignoring any category not seen during training. All preprocessing steps were combined with each model in a scikit-learn pipeline, so that they were fit only on training data within each cross-validation fold.
-
-We compared four classifiers: A dummy classifier, decision tree, logistic regression and support vector classifier (SVC) while tuning some hyperparameters e.g., maximum tree depth, regularization strength C, and the SVC’s C and gamma.
-
-We used accuracy as our evaluation metric, because the seven categories are roughly balanced in the training set (Figure 1) and no type of misclassification is clearly more costly than another in this setting. Because some categories may be much easier to predict than others, we also report a confusion matrix for the final model. Models were compared using 5-fold cross-validation on the training set, and the model with the highest mean validation score was refit on the full training set and evaluated once on the test set.
 
 The analysis was carried out using Python programming language (Van Rossum and Drake 2009), requests (Reitz 2011), zipfile (Van Rossum and Drake 2009), NumPy (Harris et al. 2020), pandas (McKinney 2010), Altair (VanderPlas et al. 2018) and scikit-learn (Pedregosa et al. 2011). Parts of the code used to perform the analysis and create this report were adapted from <https://github.com/UBC-MDS/DSCI_522_project-template-breast-cancer-predictor>.
 
