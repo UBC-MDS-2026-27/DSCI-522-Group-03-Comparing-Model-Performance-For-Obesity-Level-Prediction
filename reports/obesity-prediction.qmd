@@ -39,8 +39,9 @@ We use the UCI Obesity Levels dataset (UCI Machine Learning Repository 2019), wh
 # Methods
 
 ## Data
+We used the Estimation of Obesity Levels Based on Eating Habits and Physical Condition data set from the UCI Machine Learning Repository (UCI Machine Learning Repository 2019; Mendoza Palechor and de la Hoz Manotas 2019). The code below downloads the original archive into data/raw/ and reads the data file. Each row contains one individual’s survey responses about demographics, family history, eating habits and physical condition, together with a weight-status category. About 77% of the rows are synthetic records that the data set’s authors generated to balance the classes.
 
-<!-- Describe the source, cleaning decisions, and train/test split in prose. Add executable chunks that download the original data into data/raw/ and write cleaned or intermediate data to data/processed/. Split the data before exploratory analysis or fitting preprocessing steps. -->
+Because the original authors assigned the weight-status categories by calculating body mass index (BMI) from height and weight, we removed both of these variables before any analysis. Keeping them would allow a model to recover the label almost directly, rather than learning from lifestyle and demographic information. We then split the data into a training set (70%) and a test set (30%), stratified by weight-status category so that both sets have the same class proportions, with a fixed random seed for reproducibility. The two sets are saved to data/processed/. All exploratory analysis, preprocessing decisions and model selection used the training set only. The test set was used once, for the final evaluation
 
 ```{python}
 # Create the data folders if they don't exist
@@ -67,10 +68,6 @@ if not os.path.exists(csv_path):
 obesity = pd.read_csv(csv_path).drop(columns=["Height","Weight"])
 ```
 
-
-## Analysis
-
-<!-- Add the training-set summary and at least one relevant training-set visualization. Explain preprocessing, model choices, and the evaluation metric in English. Document how the dummy classifier, decision tree, logistic regression, and support vector classifier are compared using training data, how the final model is selected, and how the held-out test set is used for final evaluation. Include the executable chunks in this document. -->
 ```{python}
 # Do the train/test split and save the results to data/processed/
 set_config(transform_output="pandas")
@@ -86,6 +83,9 @@ obesity_test.to_csv("../data/processed/obesity_test.csv",index=False)
 
 
 ## Exploratory data analysis
+
+We first summarized the numeric features in the training set (Table 1), checked the balance of the seven weight-status categories (Figure 1), and compared the distribution of each feature across categories (Figures 2 and 3).
+
 ```{python}
 #| label: tbl-numeric-summary
 #| tbl-cap: "Summary statistics of the numeric features in the training set."
@@ -214,6 +214,20 @@ alt.Chart(obesity_train_cat, width=250, height=120).transform_calculate(
     )
 )
 ```
+
+Exploratory data analysis shows that age, physical activity frequency, gender and family history of overweight vary most across weight-status categories, while most other features overlap considerably between categories. The seven categories are roughly balanced. Obesity Type III stands out as almost all of these observations are female, report a family history of overweight and give the same answers on several survey questions, which likely reflects the synthetic records in the data set and may make this category unusually easy to predict.
+
+
+## Analysis
+
+Age and the five survey-scale features (vegetable consumption frequency, number of main meals per day, daily water intake, physical activity frequency and time using technology devices) were treated as numeric variables and standardized. Although these survey questions were answered on short integer scales, most values in the data set are not whole numbers because of the synthetic records, so treating them as categories would not be appropriate. The remaining features (gender, family history of overweight, frequent consumption of high-calorie food, eating between meals, smoking, calorie monitoring, alcohol consumption and usual transportation) were one-hot encoded, ignoring any category not seen during training. All preprocessing steps were combined with each model in a scikit-learn pipeline, so that they were fit only on training data within each cross-validation fold.
+
+We compared four classifiers: A dummy classifier, decision tree, logistic regression and support vector classifier (SVC) while tuning some hyperparameters e.g., maximum tree depth, regularization strength C, and the SVC’s C and gamma.
+
+We used accuracy as our evaluation metric, because the seven categories are roughly balanced in the training set (Figure 1) and no type of misclassification is clearly more costly than another in this setting. Because some categories may be much easier to predict than others, we also report a confusion matrix for the final model. Models were compared using 5-fold cross-validation on the training set, and the model with the highest mean validation score was refit on the full training set and evaluated once on the test set.
+
+The analysis was carried out using Python programming language (Van Rossum and Drake 2009), requests (Reitz 2011), zipfile (Van Rossum and Drake 2009), NumPy (Harris et al. 2020), pandas (McKinney 2010), Altair (VanderPlas et al. 2018) and scikit-learn (Pedregosa et al. 2011). Parts of the code used to perform the analysis and create this report were adapted from <https://github.com/UBC-MDS/DSCI_522_project-template-breast-cancer-predictor>.
+
 ```{python}
 #Tentative preprocessing plan: standardize numeric features, one-hot encode binary and categorical features, and ordinal encode the two frequency features. The frequency features are ordered from least to most frequent.
 
@@ -262,3 +276,5 @@ Kaur, Rajdeep, Rakesh Kumar, and Meenu Gupta. 2022. "Predicting Risk of Obesity 
 Mendoza Palechor, Fabio, and Alexis de la Hoz Manotas. 2019. "Dataset for Estimation of Obesity Levels Based on Eating Habits and Physical Condition in Individuals from Colombia, Peru and Mexico." *Data in Brief* 25: 104344. https://doi.org/10.1016/j.dib.2019.104344.
 
 Solomon, Dahlak Daniel, Shakir Khan, Sonia Garg, et al. 2023. "Hybrid Majority Voting: Prediction and Classification Model for Obesity." *Diagnostics* 13 (15): 2610. https://doi.org/10.3390/diagnostics13152610.
+
+
