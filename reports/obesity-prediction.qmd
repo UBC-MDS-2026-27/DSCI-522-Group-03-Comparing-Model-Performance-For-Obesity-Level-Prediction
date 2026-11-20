@@ -81,6 +81,137 @@ obesity_train.to_csv("../data/processed/obesity_train.csv")
 obesity_test.to_csv("../data/processed/obesity_test.csv")
 ```
 
+
+## Exploratory data analysis
+```{python}
+#| label: tbl-numeric-summary
+#| tbl-cap: "Summary statistics of the numeric features in the training set."
+obesity_train.describe().T.round(2)
+```
+
+```{python}
+#| label: fig-class-balance
+#| fig-cap: "Number of training-set observations in each weight-status category."
+alt.data_transformers.enable('vegafusion')
+class_order = [
+    "Insufficient_Weight", "Normal_Weight",
+    "Overweight_Level_I", "Overweight_Level_II",
+    "Obesity_Type_I", "Obesity_Type_II", "Obesity_Type_III",
+]
+
+alt.Chart(obesity_train).mark_bar().encode(
+    x=alt.X("count():Q", title="Number of observations"),
+    y=alt.Y("NObeyesdad:N",sort = "-x", title="Weight-status category"),
+).properties(width=500,
+    title=alt.TitleParams(
+    "Class balance of weight-status category",
+    anchor="middle",
+    )
+)
+```
+
+```{python}
+#| label: fig-numeric-by-class
+#| fig-cap: "Distributions of the numeric features in the training set by weight-status category."
+
+feature_labels = {
+    "Age": "Age (years)",
+    "FCVC": "Vegetable consumption frequency",
+    "NCP": "Number of main meals per day",
+    "CH2O": "Daily water intake",
+    "FAF": "Physical activity frequency",
+    "TUE": "Time using technology devices",
+}
+
+# melt for plotting via facets
+obesity_train_melted = obesity_train.melt(
+    id_vars=["NObeyesdad"],
+    value_vars=list(feature_labels.keys()),
+    var_name="feature",
+    value_name="value",
+)
+obesity_train_melted["feature"] = obesity_train_melted["feature"].map(feature_labels)
+
+alt.data_transformers.enable("vegafusion")
+
+alt.Chart(obesity_train_melted, width=250, height=180).mark_boxplot().encode(
+    x=alt.X("value:Q", title="Feature value"),
+    y=alt.Y("NObeyesdad:N", sort=class_order, title="Weight-status category"),
+).facet(
+    facet=alt.Facet("feature:N", title = None),
+    columns=2,
+).resolve_scale(
+    x="independent"
+).properties(
+    title=alt.TitleParams(
+    "Distributions of numeric features by weight-status category",
+    anchor="middle"
+    )
+)
+```
+
+```{python}
+#| label: fig-categorical-by-class
+#| fig-cap: "Proportion of training-set observations classified as Obesity Type III within each level of the categorical features. All other weight-status categories are shown in grey."
+cat_labels = {
+    "Gender": "Gender",
+    "family_history_with_overweight": "Family history of overweight",
+    "FAVC": "Frequent high-calorie food",
+    "CAEC": "Eating between meals",
+    "SMOKE": "Smokes",
+    "SCC": "Monitors calorie intake",
+    "CALC": "Alcohol consumption",
+    "MTRANS": "Usual transportation",
+}
+
+obesity_train_cat = obesity_train.melt(
+    id_vars=["NObeyesdad"],
+    value_vars=list(cat_labels.keys()),
+    var_name="feature",
+    value_name="level",
+)
+obesity_train_cat["feature"] = obesity_train_cat["feature"].map(cat_labels)
+
+focus_class = "Obesity_Type_III"    
+focus_label = "Obesity Type III"    
+
+alt.data_transformers.enable("vegafusion")
+
+alt.Chart(obesity_train_cat, width=250, height=120).transform_calculate(
+    group=f"datum.NObeyesdad == '{focus_class}' ? '{focus_label}' : 'Other categories'",
+    group_order=f"datum.NObeyesdad == '{focus_class}' ? 0 : 1",
+).mark_bar().encode(
+    y=alt.Y("level:N", title=None),
+    x=alt.X(
+        "count():Q",
+        stack="normalize",
+        title="Proportion of observations",
+        axis=alt.Axis(format="%"),
+    ),
+    color=alt.Color(
+        "group:N",
+        scale=alt.Scale(
+            domain=[focus_label, "Other categories"],
+            range=["steelblue", "lightgray"],
+        ),
+        title="Weight-status category",
+    ),
+    order=alt.Order("group_order:Q"),
+).facet(
+    facet=alt.Facet("feature:N", title=None),
+    columns=2,
+).resolve_scale(
+    y="independent"
+).resolve_axis(
+    x="independent"
+).properties(
+    title=alt.TitleParams(
+        f"Share of {focus_label} by categorical feature",
+        anchor="middle",
+    )
+)
+```
+
 # Results
 
 <!-- Present the model comparison and final test-set performance with captioned tables or figures. Number all figures and tables, refer to them in the text, and check that the narrative matches the results. Give axes, units, legends, and column names clear labels. -->
