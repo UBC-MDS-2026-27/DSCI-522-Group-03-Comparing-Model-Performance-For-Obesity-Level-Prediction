@@ -41,17 +41,15 @@ _ = alt.renderers.enable("png", scale_factor=2)
 
 # Summary
 
-We compare a dummy classifier, logistic regression, and a support vector classifier on a seven-class weight-status prediction task. The models use demographic, family history, and lifestyle variables from the UCI Obesity Levels dataset, with height and weight excluded. About 77% of the published records are synthetic (Mendoza Palechor and de la Hoz Manotas, 2019), which limits what performance on this dataset can tell us about performance on independently collected survey data.
-
-<!-- Add the selected model, its held-out test score, a comparison with the dummy baseline, and the main implication. Keep the final summary to one paragraph. -->
+We compared a dummy classifier, logistic regression, and a support vector classifier with a radial basis function kernel (RBF SVC) to predict seven weight-status categories using demographic, family history, and lifestyle features, with height and weight excluded. In five-fold cross-validation, the RBF SVC achieved the highest mean macro F1 score (0.804), followed by logistic regression (0.563) and the dummy classifier (0.041). On the held-out test set, the RBF SVC achieved a macro F1 score of 0.787, compared with 0.041 for the dummy classifier, and correctly classified 498 of 634 records (78.5%). Performance varied across categories. Of the 139 records the model predicted as normal weight, only 67 were labelled normal weight. These results show that the RBF SVC performed best among the models compared on this dataset. Because about 77% of the records are synthetic, its performance on independently collected survey data remains uncertain.
 
 # Introduction
 
-Researchers have compared machine learning models for classifying weight status from survey data, including models that use both eating habits and physical measurements  (Kaur et al. 2022 and Solomon et al. 2023). For this dataset, the authors calculated body mass index (BMI) from height and weight and used it to assign the weight-status labels (Mendoza Palechor and de la Hoz Manotas, 2019). Excluding those measurements and any features derived from them lets us test how much predictive information comes from the remaining survey responses.
+Researchers have used machine learning to classify weight status from information such as eating habits and physical measurements (Kaur et al. 2022; Solomon et al. 2023). Using the UCI Obesity Levels dataset, Zhang (2025) compared model performance with and without height and weight. In our study, we focus on how well demographic, family history, and lifestyle features predict weight status when those two measurements are excluded.
 
-Our research question is: **How well can demographic, family history, and lifestyle features predict the seven weight-status categories when height and weight are excluded, and which of the three classifiers performs best?** Comparing the classifiers against a dummy baseline shows whether using these survey responses improves predictions over a simple benchmark.
+Our research question is: **How well can demographic, family history, and lifestyle features predict seven weight-status categories when height and weight are excluded, and which classifier performs best?** We compare logistic regression and a support vector classifier with a radial basis function kernel (RBF SVC) against a dummy classifier. This comparison lets us assess whether using the survey features improves predictions over a simple baseline and whether the two fitted models differ in predictive performance.
 
-We use the UCI Obesity Levels dataset (UCI Machine Learning Repository 2019), which contains 2,111 records based on an online survey conducted in Mexico, Peru, and Colombia. Each row describes one individual or is a synthetic record generated from the survey data. The candidate predictors include age, gender, family history of overweight, eating habits, physical activity, and other behaviours such as usual transportation. The response is the recorded weight-status category, which includes insufficient weight, normal weight, overweight levels I and II, and obesity types I, II, and III.
+We use the UCI Obesity Levels dataset (UCI Machine Learning Repository 2019), which contains 2,111 individual-level records based on an online survey conducted in Colombia, Mexico, and Peru. The predictors include demographic characteristics, family history of overweight, and lifestyle factors such as eating habits and physical activity. The response is the recorded weight-status category, ranging from insufficient weight to obesity type III.
 
 # Methods
 
@@ -524,4 +522,4 @@ Mendoza Palechor, Fabio, and Alexis de la Hoz Manotas. 2019. "Dataset for Estima
 
 Solomon, Dahlak Daniel, Shakir Khan, Sonia Garg, et al. 2023. "Hybrid Majority Voting: Prediction and Classification Model for Obesity." *Diagnostics* 13 (15): 2610. https://doi.org/10.3390/diagnostics13152610.
 
-
+Zhang, Junyuan. 2025. "Machine Learning Analysis of Obesity Levels Based on Lifestyle and Physical Features." *Theoretical and Natural Science* 135: 90–98. https://doi.org/10.54254/2753-8818/2025.AU27039.
