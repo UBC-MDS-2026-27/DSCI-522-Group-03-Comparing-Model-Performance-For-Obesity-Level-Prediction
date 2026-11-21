@@ -3,14 +3,6 @@ title: "Comparing model performances for predicting obesity levels"
 author: "Anuoluwapo Akinkunmi, Raghav Haralalka, Sebastian Tenorio, Han Bao"
 date: "2026/11/21"
 jupyter: python3
-format:
-  html:
-    toc: true
-    toc-depth: 3
-    toc-title: "Contents"
-    toc-location: left
-    number-sections: true
-    embed-resources: true
 ---
 
 ```{python}
