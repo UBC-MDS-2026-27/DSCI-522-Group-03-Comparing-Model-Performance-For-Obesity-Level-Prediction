@@ -3,14 +3,6 @@ title: "Comparing model performances for predicting obesity levels"
 author: "Anuoluwapo Akinkunmi, Raghav Haralalka, Sebastian Tenorio, Han Bao"
 date: "2026/11/21"
 jupyter: python3
-format:
-  html:
-    toc: true
-    toc-depth: 3
-    toc-title: "Contents"
-    toc-location: left
-    number-sections: true
-    embed-resources: true
 ---
 
 ```{python}
@@ -67,16 +59,22 @@ csv_path = "../data/raw/ObesityDataSet_raw_and_data_sinthetic.csv"
 # Download data as zip and extract
 # This archive (UCI "Estimation of Obesity Levels Based On Eating Habits and Physical Condition") also contains ObesityDataSet_raw_and_data_sinthetic.csv
 if not os.path.exists(csv_path):
-    url ="https://archive.ics.uci.edu/static/public/544/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip"
+    url = (
+        "https://archive.ics.uci.edu/static/public/544/"
+        "estimation+of+obesity+levels+based+on+eating+habits+"
+        "and+physical+condition.zip"
+    )
+    zip_path = "../data/raw/obesity_levels.zip"
 
-    request = requests.get(url)
-    with open("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'wb') as f:
-        f.write(request.content)
+    response = requests.get(url)
+    response.raise_for_status()
+    with open(zip_path, "wb") as f:
+        f.write(response.content)
 
-    with zipfile.ZipFile("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip", 'r') as zip_ref:
+    with zipfile.ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall("../data/raw")
 
-    os.remove("../data/raw/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition.zip")
+    os.remove(zip_path)
 
 # Read in data
 obesity = pd.read_csv(csv_path).drop(columns=["Height","Weight"])
