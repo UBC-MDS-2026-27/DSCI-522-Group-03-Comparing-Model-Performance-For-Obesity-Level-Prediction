@@ -107,7 +107,6 @@ This section describes how we explored the training data. We first summarized th
 obesity_train.describe().T.round(2)
 ```
 
-<!-- Refer to @fig-class-balance and describe how many training observations fall in each weight-status category. Say whether the categories are balanced, and mention the largest and smallest categories. Consider using inline code for the counts so they update automatically. -->
 ```{python}
 #| label: fig-class-balance
 #| fig-cap: "Number of training-set observations in each weight-status category."
@@ -128,7 +127,6 @@ alt.Chart(obesity_train).mark_bar().encode(
     )
 )
 ```
-<!-- Refer to @fig-numeric-by-class and describe how the numeric features differ across weight-status categories. Mention the clearest pattern (e.g. a feature that increases or decreases across categories) and at least one feature that shows little difference between categories. -->
 
 ```{python}
 #| label: fig-numeric-by-class
@@ -167,7 +165,6 @@ alt.Chart(obesity_train_melted, width=250, height=180).mark_boxplot().encode(
     )
 )
 ```
-<!-- Refer to @fig-categorical-by-class and describe which categorical features show the strongest association with obesity type III. Mention one or two clear patterns and what they suggest about which features may help distinguish the weight-status categories. -->
 
 ```{python}
 #| label: fig-categorical-by-class
