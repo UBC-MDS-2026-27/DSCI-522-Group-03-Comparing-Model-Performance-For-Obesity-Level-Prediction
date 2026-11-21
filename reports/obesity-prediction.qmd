@@ -502,7 +502,7 @@ Because about 77% of the records in this dataset are synthetic (Mendoza Palechor
 
 # Discussion
 
-We found that survey information about age, family history, and lifestyle helped predict the seven weight-status categories even without height and weight. The RBF support vector classifier performed best among the three models we compared (@tbl-cv-results). On the test set, it correctly classified 498 of 634 records. Its macro F1 score was 0.787, compared with 0.041 for the dummy classifier.
+We found that survey information about age, family history, and lifestyle helped predict the seven weight-status categories even without height and weight. In five-fold cross-validation, the mean macro F1 scores were 0.804 for the RBF SVC, 0.563 for logistic regression, and 0.041 for the dummy classifier (@tbl-cv-results). On the held-out test set, the selected RBF SVC achieved a macro F1 score of 0.787, compared with 0.041 for the dummy classifier.
 
 The model had more difficulty with some categories than others. It predicted normal weight for 139 records, but only 67 of those records were in that category. Its most common mistake was to classify people in overweight level I as normal weight (@fig-confusion). It did much better on obesity type III, correctly classifying 96 of 97 records. We expected this category to be easier to identify because many of its records had similar survey answers in the training data. If the same mistakes occur in new surveys, researchers could use them to decide what additional information to collect.
 
