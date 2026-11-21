@@ -56,6 +56,8 @@ The authors reviewed, tested, and edited all AI-generated changes and take full 
 
 - "Are there any remaining issues with the YAML header, Python setup chunk, or citations?"
 - "What does `git pull --ff-only` do, and when should I use it?"
+- "I have started my work, I already created a branch locally and i have editted the code of conduct .md file. However, i did a merging on the comment regarding the report. Do i need to pull again since there might be changes when i want to push, What do you advice just to avoid merge conflicts."
+- "Instead of me saying almost always 3, can i use proportion, then the 2 charts in the middle of my plot is shifted, anything wrong with my code?"
 
 ## License
 
