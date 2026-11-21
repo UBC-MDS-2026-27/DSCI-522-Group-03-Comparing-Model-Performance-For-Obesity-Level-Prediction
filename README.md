@@ -13,7 +13,7 @@ We use the [UCI Obesity Levels dataset](https://doi.org/10.24432/C5H31Z), which 
 ## Report
 
 The final report can be found here 
-[HTML](https://github.com/UBC-MDS-2026-27/DSCI-522-Group-03-Comparing-Model-Performance-For-Obesity-Level-Prediction/blob/main/reports/obesity-prediction.html)
+[HTML](https://ubc-mds-2026-27.github.io/DSCI-522-Group-03-Comparing-Model-Performance-For-Obesity-Level-Prediction/reports/obesity-prediction.html)
 <!-- check url after the final report-->
 
 ## Usage
