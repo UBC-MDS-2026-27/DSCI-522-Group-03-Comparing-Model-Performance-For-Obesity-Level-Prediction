@@ -14,7 +14,7 @@ the GitHub web interface, so long as the changes are made in the _source_ file.
 
 Before you make a substantial pull request, you should always file an issue and
 make sure someone from the team agrees that it's a problem. If you've found a
-bug, create an associated issue with type "Bug" and illustrate the bug with a minimal reproducibility.
+bug, create an associated issue with type "Bug" and illustrate the bug with a minimal reproducible example.
 
 ### Setting up the project
 
@@ -35,7 +35,7 @@ uv run quarto render
 ```
 
 If your change needs a new Python package, add it with `uv add <package>`
-(this pins an exact version in `pyproject.toml` and updates `uv.lock`),
+(adds package to `pyproject.toml` and records exact version in `uv.lock`),
 and commit both files.
 
 ### Pull request process
@@ -61,7 +61,7 @@ abide by its terms.
 
 ### Use of AI
 
-One may use generative AI tools for debugging, checking code, and limited guidance on
+Contributors may use generative AI tools for debugging, checking code, and limited guidance on
 the analysis (e.g., suggesting approaches or explaining methods), but analysis decisions and the
 content of work remain their own. Every contributor must understand and verify any AI-assisted
 work before submitting it. Humans will open all issues and pull requests and make all final merge
