@@ -33,6 +33,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import cross_validate, StratifiedKFold, RandomizedSearchCV
 from sklearn.metrics import f1_score, accuracy_score, classification_report
 from scipy.stats import loguniform
+alt.data_transformers.enable('vegafusion')
 
 # png, so the charts also show in the PDF
 _ = alt.renderers.enable("png", scale_factor=2)
@@ -40,7 +41,7 @@ _ = alt.renderers.enable("png", scale_factor=2)
 
 # Summary
 
-We compare a dummy classifier, logistic regression, and a support vector classifier on a seven-class weight-status prediction task. The models use demographic, family history, and lifestyle variables from the UCI Obesity Levels dataset, with height and weight excluded. About 77% of the published records are synthetic, which limits what performance on this dataset can tell us about performance on independently collected survey data.
+We compare a dummy classifier, logistic regression, and a support vector classifier on a seven-class weight-status prediction task. The models use demographic, family history, and lifestyle variables from the UCI Obesity Levels dataset, with height and weight excluded. About 77% of the published records are synthetic(Mendoza Palechor and de la Hoz Manotas, 2019), which limits what performance on this dataset can tell us about performance on independently collected survey data.
 
 <!-- Add the selected model, its held-out test score, a comparison with the dummy baseline, and the main implication. Keep the final summary to one paragraph. -->
 
@@ -102,7 +103,7 @@ obesity_test.to_csv("../data/processed/obesity_test.csv", index=False)
 
 <!-- Add the training-set summary and at least one relevant training-set visualization. Explain preprocessing, model choices, and the evaluation metric in English. Document how the dummy classifier, decision tree, logistic regression, and support vector classifier are compared using training data, how the final model is selected, and how the held-out test set is used for final evaluation. Include the executable chunks in this document. -->
 
-## Exploratory data analysis
+### Exploratory data analysis
 ```{python}
 #| label: tbl-numeric-summary
 #| tbl-cap: "Summary statistics of the numeric features in the training set."
@@ -112,7 +113,7 @@ obesity_train.describe().T.round(2)
 ```{python}
 #| label: fig-class-balance
 #| fig-cap: "Number of training-set observations in each weight-status category."
-alt.data_transformers.enable('vegafusion')
+#alt.data_transformers.enable('vegafusion')
 class_order = [
     "Insufficient_Weight", "Normal_Weight",
     "Overweight_Level_I", "Overweight_Level_II",
@@ -152,7 +153,7 @@ obesity_train_melted = obesity_train.melt(
 )
 obesity_train_melted["feature"] = obesity_train_melted["feature"].map(feature_labels)
 
-alt.data_transformers.enable("vegafusion")
+#alt.data_transformers.enable("vegafusion")
 
 alt.Chart(obesity_train_melted, width=250, height=180).mark_boxplot().encode(
     x=alt.X("value:Q", title="Feature value"),
@@ -195,7 +196,7 @@ obesity_train_cat["feature"] = obesity_train_cat["feature"].map(cat_labels)
 focus_class = "Obesity_Type_III"    
 focus_label = "Obesity Type III"    
 
-alt.data_transformers.enable("vegafusion")
+#alt.data_transformers.enable("vegafusion")
 
 alt.Chart(obesity_train_cat, width=250, height=120).transform_calculate(
     group=f"datum.NObeyesdad == '{focus_class}' ? '{focus_label}' : 'Other categories'",
@@ -231,6 +232,11 @@ alt.Chart(obesity_train_cat, width=250, height=120).transform_calculate(
     )
 )
 ```
+
+### Preprocessing
+
+Before modelling, we prepared the features so that all three classifiers could use them. The numeric features (age, vegetable consumption frequency, number of main meals, daily water intake, physical activity frequency, and time spent using technology devices) were standardized to have a mean of zero and a standard deviation of one, because logistic regression and support vector classifiers are sensitive to the scale of their inputs. Several of these features were originally recorded on small integer scales, but the synthetic records contain decimal values, so we treated them as continuous. The binary features (gender, family history of overweight, frequent consumption of high-calorie food, smoking, and calorie monitoring) were each converted to a single 0/1 indicator. Eating between meals and alcohol consumption were ordinal encoded from least to most frequent ("no", "sometimes", "frequently", "always") to preserve their natural order, and the usual mode of transportation was one-hot encoded because its categories have no order. All transformations were learned from the training set only and then applied to the test set, so that no information from the test data influenced the preprocessing.
+
 ```{python}
 # Preprocessing plan: standardize numeric features, one-hot encode binary and categorical features, and ordinal encode the two frequency features. The frequency features are ordered from least to most frequent.
 
@@ -275,7 +281,7 @@ We compare three classifiers. The **Dummy Classifier** always predicts the most 
 Every model is placed in a pipeline with the preprocessor defined above to avoid leakage of validation folds into the encodings.
 
 ```{python}
-#| label: define models
+#| label: define-models
 
 # Splitting the features and target
 X_train = obesity_train.drop(columns="NObeyesdad")
@@ -505,7 +511,7 @@ ob3_f1 = report.loc["Obesity_Type_III", "f1-score"]
 
 The most frequent errors involve the normal weight class, which has an F1 of `{python} f"{nw_f1:.3f}"` (@tbl-test-report). Its recall is `{python} f"{nw_recall:.3f}"`, but its precision is only `{python} f"{nw_precision:.3f}"`: the model predicted normal weight for `{python} nw_predicted` test observations, and only `{python} nw_correct` of them were truly normal weight. Many of the other classes' errors fall into this category (@fig-confusion), including `{python} into_nw_text` observations. The two overweight classes also score lower (F1 of `{python} f"{ow1_f1:.3f}"` and `{python} f"{ow2_f1:.3f}"`). Most errors are between neighbouring categories, although some observations skip categories. In contrast, obesity types II and III are rarely confused with other classes (F1 of `{python} f"{ob2_f1:.3f}"` and `{python} f"{ob3_f1:.3f}"`). This is plausible because the labels were defined from body mass index, which our models cannot see (height and weight were excluded), so people near a category boundary can have very similar survey responses.
 
-Because about 77% of the records in this dataset are synthetic, these scores may be optimistic compared with performance on independently collected survey data.
+Because about 77% of the records in this dataset are synthetic (Mendoza Palechor and de la Hoz Manotas, 2019), these scores may be optimistic compared with performance on independently collected survey data.
 
 # Discussion
 
