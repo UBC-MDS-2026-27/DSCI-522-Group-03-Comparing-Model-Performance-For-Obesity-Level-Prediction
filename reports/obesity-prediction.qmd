@@ -41,7 +41,7 @@ _ = alt.renderers.enable("png", scale_factor=2)
 
 # Summary
 
-We compare a dummy classifier, logistic regression, and a support vector classifier on a seven-class weight-status prediction task. The models use demographic, family history, and lifestyle variables from the UCI Obesity Levels dataset, with height and weight excluded. About 77% of the published records are synthetic(Mendoza Palechor and de la Hoz Manotas, 2019), which limits what performance on this dataset can tell us about performance on independently collected survey data.
+We compare a dummy classifier, logistic regression, and a support vector classifier on a seven-class weight-status prediction task. The models use demographic, family history, and lifestyle variables from the UCI Obesity Levels dataset, with height and weight excluded. About 77% of the published records are synthetic (Mendoza Palechor and de la Hoz Manotas, 2019), which limits what performance on this dataset can tell us about performance on independently collected survey data.
 
 <!-- Add the selected model, its held-out test score, a comparison with the dummy baseline, and the main implication. Keep the final summary to one paragraph. -->
 
@@ -101,19 +101,23 @@ obesity_test.to_csv("../data/processed/obesity_test.csv", index=False)
 
 ## Analysis
 
-<!-- Add the training-set summary and at least one relevant training-set visualization. Explain preprocessing, model choices, and the evaluation metric in English. Document how the dummy classifier, decision tree, logistic regression, and support vector classifier are compared using training data, how the final model is selected, and how the held-out test set is used for final evaluation. Include the executable chunks in this document. -->
+This section describes how we explored the training data, prepared the features for modelling, and compared the classifiers. We first summarize and visualize the training set, then describe the preprocessing applied to each type of feature. We then define the three models, explain our choice of evaluation metric, and describe how cross-validation was used to tune and compare the models before evaluating the selected model once on the held-out test set.
+
 
 ### Exploratory data analysis
+<!-- State that all exploratory analysis uses the training set only. Refer to @tbl-numeric-summary and describe the numeric features: the typical age and its range, and anything notable about the scales of the frequency features (e.g. vegetable consumption, physical activity, water intake). -->
+
 ```{python}
 #| label: tbl-numeric-summary
 #| tbl-cap: "Summary statistics of the numeric features in the training set."
 obesity_train.describe().T.round(2)
 ```
 
+<!-- Refer to @fig-class-balance and describe how many training observations fall in each weight-status category. Say whether the categories are balanced, and mention the largest and smallest categories. Consider using inline code for the counts so they update automatically. -->
 ```{python}
 #| label: fig-class-balance
 #| fig-cap: "Number of training-set observations in each weight-status category."
-#alt.data_transformers.enable('vegafusion')
+
 class_order = [
     "Insufficient_Weight", "Normal_Weight",
     "Overweight_Level_I", "Overweight_Level_II",
@@ -130,6 +134,7 @@ alt.Chart(obesity_train).mark_bar().encode(
     )
 )
 ```
+<!-- Refer to @fig-numeric-by-class and describe how the numeric features differ across weight-status categories. Mention the clearest pattern (e.g. a feature that increases or decreases across categories) and at least one feature that shows little difference between categories. -->
 
 ```{python}
 #| label: fig-numeric-by-class
@@ -153,8 +158,6 @@ obesity_train_melted = obesity_train.melt(
 )
 obesity_train_melted["feature"] = obesity_train_melted["feature"].map(feature_labels)
 
-#alt.data_transformers.enable("vegafusion")
-
 alt.Chart(obesity_train_melted, width=250, height=180).mark_boxplot().encode(
     x=alt.X("value:Q", title="Feature value"),
     y=alt.Y("NObeyesdad:N", sort=class_order, title="Weight-status category"),
@@ -170,6 +173,7 @@ alt.Chart(obesity_train_melted, width=250, height=180).mark_boxplot().encode(
     )
 )
 ```
+<!-- Refer to @fig-categorical-by-class and describe which categorical features show the strongest association with obesity type III. Mention one or two clear patterns and what they suggest about which features may help distinguish the weight-status categories. -->
 
 ```{python}
 #| label: fig-categorical-by-class
@@ -195,8 +199,6 @@ obesity_train_cat["feature"] = obesity_train_cat["feature"].map(cat_labels)
 
 focus_class = "Obesity_Type_III"    
 focus_label = "Obesity Type III"    
-
-#alt.data_transformers.enable("vegafusion")
 
 alt.Chart(obesity_train_cat, width=250, height=120).transform_calculate(
     group=f"datum.NObeyesdad == '{focus_class}' ? '{focus_label}' : 'Other categories'",
@@ -278,8 +280,6 @@ scaled_obesity_test.to_csv("../data/processed/processed_obesity_test.csv", index
 
 We compare three classifiers. The **Dummy Classifier** always predicts the most frequent class and serves as our baseline. **Logistic Regressor** model is a fast and interpretable linear model, while the **RBF Support Vector Classifier (SVC)** can learn non-linear decision boundaries. Every model is placed in a pipeline with the preprocessor defined above, so that during cross-validation the preprocessing is fitted only on the training folds and no information from the validation folds leaks into the encodings.
 
-Every model is placed in a pipeline with the preprocessor defined above to avoid leakage of validation folds into the encodings.
-
 ```{python}
 #| label: define-models
 
@@ -306,9 +306,6 @@ pipelines = {
 ### Evaluation Metric
 
 We select models using the **macro-averaged F1 score**. The F1 score combines precision and recall for a single class, and the macro average weights all seven weight-status classes equally, so a model that performs poorly on any one class is penalized. We also report accuracy as a more familiar secondary measure, but all model selection decisions use macro F1 only. @tbl-class-balance shows the training class proportions, which range from `{python} f"{y_train.value_counts(normalize=True).min():.1%}"` to `{python} f"{y_train.value_counts(normalize=True).max():.1%}"`. The classes are close to balanced, so accuracy is not dominated by any single class, but macro F1 can still reveal weaknesses on individual classes that accuracy would hide.
-
-
-Note: All model selection decisions below use macro F1 only.
 
 ```{python}
 #| label: tbl-class-balance
