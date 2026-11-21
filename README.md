@@ -6,11 +6,9 @@ A data analysis project for DSCI 522 (Data Science Workflows) in the Master of D
 
 ## About
 
-We compare a dummy classifier, a decision tree, logistic regression, and a support vector classifier to see how well demographic, family-history, and lifestyle features predict seven weight-status categories. Previous studies have used machine learning for obesity classification (Kaur et al. 2022 and Solomon et al. 2023). We exclude height and weight because the dataset authors used those measurements to calculate the body mass index (BMI) that defines the target labels (Mendoza Palechor and de la Hoz Manotas 2019).
+We compared a dummy classifier, logistic regression, and a support vector classifier with a radial basis function kernel (RBF SVC) to predict seven weight-status categories from demographic, family history, and lifestyle features. We excluded height and weight because the dataset authors used those measurements to calculate the body mass index (BMI) that defined the target labels (Mendoza Palechor and de la Hoz Manotas 2019). The RBF SVC performed best in five-fold cross-validation. On the held-out test set, it achieved a macro F1 score of 0.787, compared with 0.041 for the dummy classifier, and correctly classified 498 of 634 records (78.5%). The model tended to overpredict normal weight. Of the 139 records it assigned to that category, 67 were actually labelled normal weight. Because about 77% of the dataset is synthetic, performance on independently collected survey data remains uncertain.
 
-<!-- add the selected model, the metric and held-out test score, how the model compares with the dummy baseline, and what the result means. -->
-
-We use the [UCI Obesity Levels dataset](https://doi.org/10.24432/C5H31Z), which contains 2,111 records based on survey data from Mexico, Peru, and Colombia. Each row represents an individual-level record collected through the survey or generated synthetically. About 77% of the published records are synthetic, which limits what performance on this dataset can tell us about performance on independently collected survey data.
+We use the [UCI Obesity Levels dataset](https://doi.org/10.24432/C5H31Z), which contains 2,111 records based on survey data from Mexico, Peru, and Colombia. Each row represents an individual-level record collected through the survey or generated synthetically. The variables include age, gender, family history of overweight, eating habits, and physical activity. The response is the recorded weight-status category, ranging from insufficient weight to obesity type III.
 
 ## Report
 
@@ -35,7 +33,7 @@ uv sync
 To run the analysis and render the report, run the following from the root of this repository:
 
 ``` bash
-uv run quarto render
+uv run quarto render reports/obesity-prediction.qmd
 ```
 
 Rendering runs the whole analysis from scratch:
@@ -50,11 +48,9 @@ Rendering regenerates the training and test CSV files in `data/processed/` and w
 
 ## AI use statement
 
-We used **ChatGPT** to double-check our project files against the Milestone 1 requirements and troubleshoot issues with our code and workflow. When we got stuck, we asked for a hint or a concrete next step. We asked AI to act as a tutor by guiding us step by step, explaining the reasoning behind its suggestions, and giving candid feedback on our work.
+We used **ChatGPT** and **Claude (Anthropic)** to double-check our project files against the Milestone 1 requirements, debug code and workflow issues, and get hints when we got stuck. We asked AI to act as a tutor by guiding us step by step, explaining the reasoning behind its suggestions, and giving candid feedback on our work.
 
 The authors reviewed, tested, and edited all AI-generated changes and take full responsibility for the contents of this repository.
-
-<!-- add other AI tools and how they were used once confirmed. -->
 
 **Example prompts**
 
@@ -73,3 +69,4 @@ The [UCI dataset](https://doi.org/10.24432/C5H31Z) is available under [CC BY 4.0
 - Mendoza Palechor, F., & de la Hoz Manotas, A. (2019). [Dataset for estimation of obesity levels based on eating habits and physical condition in individuals from Colombia, Peru and Mexico](https://doi.org/10.1016/j.dib.2019.104344). *Data in Brief, 25*, 104344.
 - Kaur, R., Kumar, R., & Gupta, M. (2022). [Predicting risk of obesity and meal planning to reduce the obese in adulthood using artificial intelligence](https://doi.org/10.1007/s12020-022-03215-4). *Endocrine, 78*(3), 458–469.
 - Solomon, D. D., Khan, S., Garg, S., Gupta, G., Almjally, A., Alabduallah, B. I., Alsagri, H. S., Ibrahim, M. M., & Abdallah, A. M. A. (2023). [Hybrid majority voting: Prediction and classification model for obesity](https://doi.org/10.3390/diagnostics13152610). *Diagnostics, 13*(15), 2610.
+- Zhang, J. (2025). [Machine learning analysis of obesity levels based on lifestyle and physical features](https://doi.org/10.54254/2753-8818/2025.AU27039). *Theoretical and Natural Science, 135*, 90–98.
