@@ -512,7 +512,13 @@ Because about 77% of the records in this dataset are synthetic (Mendoza Palechor
 
 # Discussion
 
-<!-- Answer the research question using the observed results. Discuss their practical meaning, whether the findings matched expectations, assumptions, limitations, potential impact, and future questions. Consider how synthetic records affect interpretation and what validation on independently collected data would add. -->
+We found that survey information about age, family history, and lifestyle helped predict the seven weight-status categories even without height and weight. The RBF support vector classifier performed best among the three models we compared (@tbl-cv-results). On the test set, it correctly classified 498 of 634 records. Its macro F1 score was 0.787, compared with 0.041 for the dummy classifier.
+
+The model had more difficulty with some categories than others. It predicted normal weight for 139 records, but only 67 of those records were in that category. Its most common mistake was to classify people in overweight level I as normal weight (@fig-confusion). It did much better on obesity type III, correctly classifying 96 of 97 records. We expected this category to be easier to identify because many of its records had similar survey answers in the training data. If the same mistakes occur in new surveys, researchers could use them to decide what additional information to collect.
+
+About 77% of the dataset consists of synthetic records (Mendoza Palechor and de la Hoz Manotas 2019). The training and test sets both came from this dataset, and we only used one train–test split. The model may perform differently on a new set of survey responses. To apply these findings to another survey, we would expect people to understand the questions in similar ways and the survey to use the same BMI-based weight categories.
+
+A next step would be to test the model on new survey data. We could check whether it still predicts obesity type III well and whether it still predicts normal weight too often. We could also compare records the model got right and wrong to see what information might help it tell similar categories apart.
 
 # References
 
