@@ -23,6 +23,7 @@ format:
   typst:
     # png figures for the PDF
     fig-format: png
+    code-overflow: wrap
     # shrink figures and tables to fit the page
     # (Typst code below; `x => ...` is a function of x)
     include-in-header:
