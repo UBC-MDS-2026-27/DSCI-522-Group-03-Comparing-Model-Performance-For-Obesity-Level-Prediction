@@ -56,7 +56,8 @@ We use the UCI Obesity Levels dataset (UCI Machine Learning Repository 2019), wh
 
 ## Data
 
-<!-- Describe the source, cleaning decisions, and train/test split in prose. Add executable chunks that download the original data into data/raw/ and write cleaned or intermediate data to data/processed/. Split the data before exploratory analysis or fitting preprocessing steps. -->
+We obtained the data from the UCI Machine Learning Repository, where it is published under a Creative Commons Attribution 4.0 International (CC BY 4.0) license (UCI Machine Learning Repository 2019). The code below downloads the original zip archive, extracts the data file into `data/raw/`, and then deletes the archive. The download only runs if the data file is not already present, so the report can be re-rendered without downloading the data again. The dataset has no missing values, so no rows needed to be removed or imputed. Our only cleaning decision was to drop the height and weight columns. The dataset's authors assigned each weight-status label from body mass index, which is calculated directly from height and weight (Mendoza Palechor and de la Hoz Manotas, 2019), so keeping these columns would let the models recover the label from its definition rather than learn from the survey responses.
+
 
 ```{python}
 # Create the data folders if they don't exist
@@ -231,7 +232,7 @@ alt.Chart(obesity_train_cat, width=250, height=120).transform_calculate(
 )
 ```
 ```{python}
-#Tentative preprocessing plan: standardize numeric features, one-hot encode binary and categorical features, and ordinal encode the two frequency features. The frequency features are ordered from least to most frequent.
+# Preprocessing plan: standardize numeric features, one-hot encode binary and categorical features, and ordinal encode the two frequency features. The frequency features are ordered from least to most frequent.
 
 # Reading the saved training and testing dataset files if dataframes not in memory
 if "obesity_train" not in globals() or "obesity_test" not in globals():
@@ -269,10 +270,7 @@ scaled_obesity_test.to_csv("../data/processed/processed_obesity_test.csv", index
 
 ### Defining the models
 
-We compare three classifiers:
-- **Dummy Classifier**: Always predicting the most frequent class. Our baseline model.
-- **Logistic Regressor**: Fast and interpretable linear model.
-- **RBF Support Vector Classifier (SVC)**: Learns from non-linear decision boundaries.
+We compare three classifiers. The **Dummy Classifier** always predicts the most frequent class and serves as our baseline. **Logistic Regressor** model is a fast and interpretable linear model, while the **RBF Support Vector Classifier (SVC)** can learn non-linear decision boundaries. Every model is placed in a pipeline with the preprocessor defined above, so that during cross-validation the preprocessing is fitted only on the training folds and no information from the validation folds leaks into the encodings.
 
 Every model is placed in a pipeline with the preprocessor defined above to avoid leakage of validation folds into the encodings.
 
@@ -301,10 +299,8 @@ pipelines = {
 
 ### Evaluation Metric
 
-- We select models using **macro-averaged F1**. F1 combines precision and recall for one class, and the macro average weights all seven weight-status classes equally, so a model that performs poorly on any one class is penalized. 
-- We also report accuracy as a more familiar secondary measure. 
-- @tbl-class-balance shows the training class proportions, which range from `{python} f"{y_train.value_counts(normalize=True).min():.1%}"` to `{python} f"{y_train.value_counts(normalize=True).max():.1%}"`. 
-- The classes are close to balanced, so accuracy is not dominated by one class, but macro F1 still shows weakness on individual classes that accuracy can hide. 
+We select models using the **macro-averaged F1 score**. The F1 score combines precision and recall for a single class, and the macro average weights all seven weight-status classes equally, so a model that performs poorly on any one class is penalized. We also report accuracy as a more familiar secondary measure, but all model selection decisions use macro F1 only. @tbl-class-balance shows the training class proportions, which range from `{python} f"{y_train.value_counts(normalize=True).min():.1%}"` to `{python} f"{y_train.value_counts(normalize=True).max():.1%}"`. The classes are close to balanced, so accuracy is not dominated by any single class, but macro F1 can still reveal weaknesses on individual classes that accuracy would hide.
+
 
 Note: All model selection decisions below use macro F1 only.
 
@@ -322,9 +318,7 @@ y_train.value_counts(normalize=True).round(3).rename("proportion").to_frame()
 
 ### Cross Validation and Hyperparameter Tuning
 
-- All comparisons use five-fold stratified cross-validation on the training set only. 
-- The dummy classifier has nothing to tune, so we cross-validate it directly. 
-- For logistic regression and the SVC we use `RandomizedSearchCV` with 20 sampled candidates each, scored by validation macro F1. `C` and `gamma` can matter across several orders of magnitude, so we sample them from log-uniform distributions. Random search covers the continuous space at a fixed cost and avoids committing to a coarse grid. With `refit` enabled, each search refits its best candidate on the whole training set. The test set is not used at this stage.
+All model comparisons use five-fold stratified cross-validation on the training set only. The dummy classifier has no hyperparameters to tune, so we cross-validate it directly. For logistic regression and the support vector classifier, we use a randomized hyperparameter search with 20 sampled candidates each, scored by validation macro F1. Both models' regularization strength (C) and the support vector classifier's kernel width (gamma) can matter across several orders of magnitude, so we sample them from log-uniform distributions. Random search covers this continuous range at a fixed cost and avoids committing to a coarse grid of values. Once each search is complete, its best candidate is refitted on the whole training set. The test set is not used at this stage.
 
 ```{python}
 #| label: tune-models
@@ -389,11 +383,9 @@ comparison = pd.DataFrame(rows).T
 comparison.round(4)
 ```
 
-- The Dummy baseline reaches a validation macro F1 of only `{python} f"{dummy_cv['test_f1_macro'].mean():.3f}"`, so the survey responses carry predictive information beyond the class frequencies. <!-- Add one sentence comparing Logistic Regression and RBF SVC using @tbl-cv-results, and mention whether the gap is larger than the fold standard deviation. -->
-- The RBF SVC clearly outperforms logistic regression, with a mean validation macro F1 of `{python} f"{comparison.loc['RBF SVC', 'Validation macro F1 (mean)']:.3f}"` versus `{python} f"{comparison.loc['Logistic Regression', 'Validation macro F1 (mean)']:.3f}"`. 
-- The difference of `{python} f"{comparison.loc['RBF SVC', 'Validation macro F1 (mean)'] - comparison.loc['Logistic Regression', 'Validation macro F1 (mean)']:.3f}"` is more than ten times the fold standard deviation of either model (`{python} f"{comparison.loc['RBF SVC', 'Validation macro F1 (SD)']:.3f}"` for the SVC and `{python} f"{comparison.loc['Logistic Regression', 'Validation macro F1 (SD)']:.3f}"` for logistic regression), so the gap is not explained by fold-to-fold variation. 
-- Validation accuracy shows the same ordering. Logistic regression's training score (`{python} f"{comparison.loc['Logistic Regression', 'Training macro F1 (mean)']:.3f}"`) is close to its validation score, which suggests that a linear model cannot capture the structure in these features. 
-- The SVC fits the training data almost perfectly (training macro F1 of `{python} f"{comparison.loc['RBF SVC', 'Training macro F1 (mean)']:.3f}"`), so it overfits to some degree. Even so, it generalizes much better to the validation folds.
+The dummy baseline reaches a validation macro F1 of only `{python} f"{dummy_cv['test_f1_macro'].mean():.3f}"`, so the survey responses carry predictive information beyond the class frequencies. The support vector classifier clearly outperforms logistic regression, with a mean validation macro F1 of `{python} f"{comparison.loc['RBF SVC', 'Validation macro F1 (mean)']:.3f}"` compared with `{python} f"{comparison.loc['Logistic Regression', 'Validation macro F1 (mean)']:.3f}"`. This difference of `{python} f"{comparison.loc['RBF SVC', 'Validation macro F1 (mean)'] - comparison.loc['Logistic Regression', 'Validation macro F1 (mean)']:.3f}"` is more than ten times the fold standard deviation of either model (`{python} f"{comparison.loc['RBF SVC', 'Validation macro F1 (SD)']:.3f}"` for the support vector classifier and `{python} f"{comparison.loc['Logistic Regression', 'Validation macro F1 (SD)']:.3f}"` for logistic regression), so the gap cannot be explained by fold-to-fold variation. Validation accuracy shows the same ordering.
+
+The training scores help explain this difference. Logistic regression's training macro F1 (`{python} f"{comparison.loc['Logistic Regression', 'Training macro F1 (mean)']:.3f}"`) is close to its validation score, which suggests that a linear model cannot capture the structure in these features. The support vector classifier, on the other hand, fits the training data almost perfectly (training macro F1 of `{python} f"{comparison.loc['RBF SVC', 'Training macro F1 (mean)']:.3f}"`), so it overfits to some degree. Even so, it generalizes much better to the validation folds than logistic regression does.
 
 ## Selected Model
 
