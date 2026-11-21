@@ -37,7 +37,7 @@ We compared a dummy classifier, logistic regression, and a support vector classi
 
 # Introduction
 
-Researchers have used machine learning to classify weight status from information such as eating habits and physical measurements (Kaur et al. 2022; Solomon et al. 2023). Using the UCI Obesity Levels dataset, Zhang (2025) compared model performance with and without height and weight. In our study, we focus on how well demographic, family history, and lifestyle features predict weight status when those two measurements are excluded.
+Researchers have used machine learning to classify weight status from information such as eating habits and physical measurements (Kaur et al. 2022; Solomon et al. 2023). Using the University of California, Irvine (UCI) Obesity Levels dataset, Zhang (2025) compared model performance with and without height and weight. In our study, we focus on how well demographic, family history, and lifestyle features predict weight status when those two measurements are excluded.
 
 Our research question is: **How well can demographic, family history, and lifestyle features predict seven weight-status categories when height and weight are excluded, and which classifier performs best?** We compare logistic regression and a support vector classifier with a radial basis function kernel (RBF SVC) against a dummy classifier. This comparison lets us assess whether using the survey features improves predictions over a simple baseline and whether the two fitted models differ in predictive performance.
 
@@ -512,7 +512,7 @@ We found that survey information about age, family history, and lifestyle helped
 
 The model had more difficulty with some categories than others. It predicted normal weight for 139 records, but only 67 of those records were in that category. Its most common mistake was to classify people in overweight level I as normal weight (@fig-confusion). It did much better on obesity type III, correctly classifying 96 of 97 records. We expected this category to be easier to identify because many of its records had similar survey answers in the training data. If the same mistakes occur in new surveys, researchers could use them to decide what additional information to collect.
 
-About 77% of the dataset consists of synthetic records (Mendoza Palechor and de la Hoz Manotas 2019). The training and test sets both came from this dataset, and we only used one train–test split. The model may perform differently on a new set of survey responses. To apply these findings to another survey, we would expect people to understand the questions in similar ways and the survey to use the same BMI-based weight categories.
+About 77% of the dataset consists of synthetic records (Mendoza Palechor and de la Hoz Manotas 2019). The training and test sets both came from this dataset, and we only used one train–test split. The model may perform differently on a new set of survey responses. To apply these findings to another survey, we would expect people to understand the questions in similar ways and the survey to use the same body mass index (BMI)-based weight categories.
 
 A next step would be to test the model on new survey data. We could check whether it still predicts obesity type III well and whether it still predicts normal weight too often. We could also compare records the model got right and wrong to see what information might help it tell similar categories apart.
 
@@ -527,3 +527,15 @@ Mendoza Palechor, Fabio, and Alexis de la Hoz Manotas. 2019. "Dataset for Estima
 Solomon, Dahlak Daniel, Shakir Khan, Sonia Garg, et al. 2023. "Hybrid Majority Voting: Prediction and Classification Model for Obesity." *Diagnostics* 13 (15): 2610. https://doi.org/10.3390/diagnostics13152610.
 
 Zhang, Junyuan. 2025. "Machine Learning Analysis of Obesity Levels Based on Lifestyle and Physical Features." *Theoretical and Natural Science* 135: 90–98. https://doi.org/10.54254/2753-8818/2025.AU27039.
+
+Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, et al. 2020. "Array Programming with NumPy." *Nature* 585: 357–362. https://doi.org/10.1038/s41586-020-2649-2.
+
+McKinney, Wes. 2010. "Data Structures for Statistical Computing in Python." In *Proceedings of the 9th Python in Science Conference*, edited by Stéfan van der Walt and Jarrod Millman, 56–61. https://doi.org/10.25080/Majora-92bf1922-00a.
+
+Pedregosa, Fabian, Gaël Varoquaux, Alexandre Gramfort, et al. 2011. "Scikit-learn: Machine Learning in Python." *Journal of Machine Learning Research* 12: 2825–2830.
+
+Reitz, Kenneth. 2011. "Requests: HTTP for Humans." https://requests.readthedocs.io/.
+
+Van Rossum, Guido, and Fred L. Drake. 2009. *Python 3 Reference Manual*. Scotts Valley, CA: CreateSpace.
+
+VanderPlas, Jacob, Brian E. Granger, Jeffrey Heer, et al. 2018. "Altair: Interactive Statistical Visualizations for Python." *Journal of Open Source Software* 3 (32): 1057. https://doi.org/10.21105/joss.01057.
