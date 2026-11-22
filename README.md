@@ -66,7 +66,13 @@ The [UCI dataset](https://doi.org/10.24432/C5H31Z) is available under [CC BY 4.0
 ## References
 
 - [Estimation of Obesity Levels Based on Eating Habits and Physical Condition](https://doi.org/10.24432/C5H31Z). (2019). UCI Machine Learning Repository.
-- Mendoza Palechor, F., & de la Hoz Manotas, A. (2019). [Dataset for estimation of obesity levels based on eating habits and physical condition in individuals from Colombia, Peru and Mexico](https://doi.org/10.1016/j.dib.2019.104344). *Data in Brief, 25*, 104344.
 - Kaur, R., Kumar, R., & Gupta, M. (2022). [Predicting risk of obesity and meal planning to reduce the obese in adulthood using artificial intelligence](https://doi.org/10.1007/s12020-022-03215-4). *Endocrine, 78*(3), 458–469.
+- Mendoza Palechor, F., & de la Hoz Manotas, A. (2019). [Dataset for estimation of obesity levels based on eating habits and physical condition in individuals from Colombia, Peru and Mexico](https://doi.org/10.1016/j.dib.2019.104344). *Data in Brief, 25*, 104344.
 - Solomon, D. D., Khan, S., Garg, S., Gupta, G., Almjally, A., Alabduallah, B. I., Alsagri, H. S., Ibrahim, M. M., & Abdallah, A. M. A. (2023). [Hybrid majority voting: Prediction and classification model for obesity](https://doi.org/10.3390/diagnostics13152610). *Diagnostics, 13*(15), 2610.
 - Zhang, J. (2025). [Machine learning analysis of obesity levels based on lifestyle and physical features](https://doi.org/10.54254/2753-8818/2025.AU27039). *Theoretical and Natural Science, 135*, 90–98.
+- Harris, C. R., Millman, K. J., van der Walt, S. J., et al. (2020). [Array programming with NumPy](https://doi.org/10.1038/s41586-020-2649-2). *Nature, 585*, 357–362.
+- McKinney, W. (2010). [Data structures for statistical computing in Python](https://doi.org/10.25080/Majora-92bf1922-00a). In *Proceedings of the 9th Python in Science Conference* (pp. 56–61).
+- Pedregosa, F., Varoquaux, G., Gramfort, A., et al. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830.
+- Reitz, K. (2011). [Requests: HTTP for humans](https://requests.readthedocs.io/). https://requests.readthedocs.io/
+- Van Rossum, G., & Drake, F. L. (2009). *Python 3 reference manual*. Scotts Valley, CA: CreateSpace.
+- VanderPlas, J., Granger, B. E., Heer, J., et al. (2018). [Altair: Interactive statistical visualizations for Python](https://doi.org/10.21105/joss.01057). *Journal of Open Source Software, 3*(32), 1057.
