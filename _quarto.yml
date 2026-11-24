@@ -13,6 +13,7 @@ format:
     toc-location: left
     number-sections: true
     embed-resources: true
+    format-links: false
     include-in-header:
       text: |
         <style>
