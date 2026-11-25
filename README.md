@@ -21,7 +21,7 @@ The analysis runs in a Docker container so everyone uses the same software and p
 
 ### Setup
 
-First time running the project, install and launch Docker. Then use Git to clone the repository and enter its root directory.
+First time running the project, install and launch [Docker](https://www.docker.com/get-started/). Then use Git to clone the repository and enter its root directory.
 
 ```bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group-03-Comparing-Model-Performance-For-Obesity-Level-Prediction.git
