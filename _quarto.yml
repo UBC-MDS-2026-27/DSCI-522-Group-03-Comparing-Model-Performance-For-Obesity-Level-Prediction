@@ -13,7 +13,12 @@ format:
     toc-location: left
     number-sections: true
     embed-resources: true
-    format-links: false
+    code-overflow: wrap
+    format-links:
+      - html
+      - text: PDF
+        href: https://github.com/UBC-MDS-2026-27/DSCI-522-Group-03-Comparing-Model-Performance-For-Obesity-Level-Prediction/blob/main/reports/obesity-prediction.pdf
+        icon: file-pdf
     include-in-header:
       text: |
         <style>
