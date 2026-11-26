@@ -322,10 +322,12 @@ All model comparisons use five-fold stratified cross-validation on the training 
 ```{python}
 #| label: tune-models
 
+CV_KWARGS = dict(cv=cv, scoring=SCORING, return_train_score=True)
+
 # Baseline: cross-validated directly
 dummy_cv = cross_validate(
     pipelines["Dummy"], X_train, y_train,
-    cv=cv, scoring=SCORING, return_train_score=True,
+    **CV_KWARGS
 )
 
 # Search spaces (pipeline step name + "__" + parameter name)
@@ -341,8 +343,8 @@ searches = {}
 for name, dist in param_dists.items():
     searches[name] = RandomizedSearchCV(
         pipelines[name], dist,
-        n_iter=20, cv=cv, scoring=SCORING, refit="f1_macro",
-        return_train_score=True, random_state=522,
+        n_iter=20, refit="f1_macro", random_state=522,
+        **CV_KWARGS
     )
     searches[name].fit(X_train, y_train)
 ```
