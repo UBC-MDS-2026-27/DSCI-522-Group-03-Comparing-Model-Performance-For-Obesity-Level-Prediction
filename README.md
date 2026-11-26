@@ -16,33 +16,55 @@ The final report can be found [here](https://ubc-mds-2026-27.github.io/DSCI-522-
 
 ## Usage
 
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and [Quarto](https://quarto.org/docs/get-started/). Then clone the repository and open its root directory in your terminal.
+The analysis runs in a Docker container so everyone uses the same software and package versions. The image is available on [Docker Hub](https://hub.docker.com/r/humphreybao/dsci-522-group-03-comparing-model-performance-for-obesity-level-prediction).
+
+
+### Setup
+
+First time running the project, install and launch [Docker](https://www.docker.com/get-started/). Then use Git to clone the repository and enter its root directory.
 
 ```bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group-03-Comparing-Model-Performance-For-Obesity-Level-Prediction.git
 cd DSCI-522-Group-03-Comparing-Model-Performance-For-Obesity-Level-Prediction
 ```
-Then run the following from the root of this repository to create the virtual environment:
 
-``` bash
-uv sync
+Run all the commands below from the root of this repository.
+
+### 1. Make an SSH key
+
+If you don't have an ssh key yet, make one and press Enter at each question:
+
+```bash
+ssh-keygen -t ed25519
 ```
 
-To run the analysis and render the report, run the following from the root of this repository:
+The container lets you log in with this key. If you skip this step, Docker makes a folder named ~/.ssh/id_ed25519.pub instead, and connecting to the container over ssh fails until you delete that folder and make the key.
 
-``` bash
-uv run quarto render
+### 2. Download the image
+
+```bash
+docker compose pull
 ```
 
-Rendering runs the whole analysis from scratch:
-The analysis uses the CSV in `data/raw/`. If the file is missing, the report downloads it from the UCI Machine Learning Repository, which requires an internet connection. 
-Rendering regenerates the training and test CSV files in `data/processed/` and writes the HTML report to `reports/obesity-prediction.html`.
+### 3. Run the analysis and render the report
+
+```bash
+docker compose run --rm analysis-env uv run quarto render
+```
+
+If the raw CSV is missing from `data/raw/`, the analysis downloads it from the UCI Machine Learning Repository and requires an internet connection. The run regenerates the training, test, and preprocessed CSVs in `data/processed/`, then replaces `reports/obesity-prediction.html` and `reports/obesity-prediction.pdf` with the rendered reports. The `--rm` flag automatically removes the temporary container when the command finishes.
+
+## Contributing
+
+To develop inside the container, add a package, or update the published report, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Dependencies
 
-- [uv](https://docs.astral.sh/uv/) (version 0.12 or higher)
-- [Quarto CLI](https://quarto.org/) (version 1.10 or higher)
-- Python and packages listed in [`pyproject.toml`](pyproject.toml), and their resolved versions are recorded in [`uv.lock`](uv.lock).
+- [Docker](https://www.docker.com/)
+- The image is built from the [`Dockerfile`](Dockerfile) in this repository.
+  It installs Quarto, uv,
+  and Python with the packages listed in [`pyproject.toml`](pyproject.toml)
+  (exact versions are locked in [`uv.lock`](uv.lock)).
 
 ## AI use statement
 
