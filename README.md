@@ -52,7 +52,7 @@ docker compose pull
 docker compose run --rm analysis-env uv run quarto render
 ```
 
-The analysis uses the CSV in `data/raw/` and downloads it from the UCI Machine Learning Repository if it is missing. The run regenerates the training, test, and preprocessed CSVs in `data/processed/`, then replaces `reports/obesity-prediction.html` and `reports/obesity-prediction.pdf` with the rendered reports. The `--rm` flag automatically removes the temporary container when the command finishes.
+If the raw CSV is missing from `data/raw/`, the analysis downloads it from the UCI Machine Learning Repository and requires an internet connection. The run regenerates the training, test, and preprocessed CSVs in `data/processed/`, then replaces `reports/obesity-prediction.html` and `reports/obesity-prediction.pdf` with the rendered reports. The `--rm` flag automatically removes the temporary container when the command finishes.
 
 ## Contributing
 
