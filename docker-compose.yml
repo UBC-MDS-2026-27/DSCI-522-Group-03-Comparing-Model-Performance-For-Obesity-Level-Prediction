@@ -8,7 +8,7 @@ services:
     # name in lowercase, with the sha- tag your workflow pushed (not latest).
     # After that, the workflow updates the tag for you.
 
-    image: humphreybao/dsci-522-group-03-comparing-model-performance-for-obesity-level-prediction:sha-e9f62f9
+    image: humphreybao/dsci-522-group-03-comparing-model-performance-for-obesity-level-prediction:sha-8f70e04
     ports:
       # 2222 on your computer, 22 (ssh) in the container
       - "2222:22"
